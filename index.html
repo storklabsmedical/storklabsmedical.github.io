@@ -314,22 +314,49 @@
 
     /* ── RESPONSIVE ───────────────────────────────────────────── */
     @media (max-width: 860px) {
+      /* prevent any horizontal overflow */
+      body { overflow-x: hidden; }
+      .container { padding: 0 20px; max-width: 100%; box-sizing: border-box; }
+
       .nav-top { padding: 10px 20px; }
       .nav-tabs { overflow-x: auto; justify-content: flex-start; -webkit-overflow-scrolling: touch; }
-      .nav-tabs a { padding: 10px 20px; font-size: 11px; white-space: nowrap; }
-      section { padding: 72px 24px; }
-      .aff-bar { padding: 36px 24px; }
-      .aff-row { gap: 32px 40px; flex-wrap: wrap; }
-      .aff-row img { height: 48px; }
-      .sol-grid { grid-template-columns: 1fr; gap: 40px; }
-      .stat-grid { grid-template-columns: 1fr; }
-      .tr-grid { grid-template-columns: repeat(2,1fr); gap: 24px; }
-      .team-grid { flex-direction: column; align-items: center; }
-      .adv-grid { flex-direction: column; align-items: center; }
+      .nav-tabs a { padding: 10px 16px; font-size: 11px; white-space: nowrap; }
+
+      section { padding: 64px 20px; }
+      h1 { font-size: clamp(26px, 7vw, 44px); }
+      h2 { font-size: clamp(20px, 5.5vw, 34px); }
+
+      .aff-bar { padding: 36px 20px; }
+      .aff-row { gap: 28px 36px; flex-wrap: wrap; justify-content: center; }
+      .aff-row img { height: 56px; max-width: 160px; object-fit: contain; }
+      .aff-row img.ucsc-logo { height: 44px; max-width: 160px; }
+
+      .sol-grid { grid-template-columns: 1fr; gap: 32px; }
+      .device-wrap { width: 100%; }
+      .device-wrap img { width: 100%; height: auto; }
+
+      .stat-grid { grid-template-columns: 1fr; gap: 16px; }
+      .tr-grid { grid-template-columns: repeat(2,1fr); gap: 20px; }
+
+      /* team: 2 cols, fluid width */
+      .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 32px 20px;
+        width: 100%;
+        max-width: 360px;
+        margin: 0 auto;
+      }
+      .team-photo { width: 110px; height: 110px; }
+      .team-card h3 { font-size: 13px; white-space: normal; }
+      .team-card .team-role { font-size: 10px; }
+
       .news-grid { grid-template-columns: 1fr; }
-      footer { flex-direction: column; gap: 10px; text-align: center; padding: 24px 20px 120px; }
+
+      #contact { text-align: center; padding: 48px 20px; }
+      .contact-inner { max-width: 100%; }
+
+      footer { flex-direction: column; gap: 10px; text-align: center; padding: 24px 20px 80px; }
       #hero { padding-top: 130px; min-height: auto; padding-bottom: 64px; }
-      #contact { padding: 48px 24px; }
     }
   </style>
 </head>
@@ -390,7 +417,7 @@
         <img src="LMPBF-default.png" alt="Lex Mundi Pro Bono Foundation">
       </a>
       <a href="https://engineering.ucsc.edu/" target="_blank" rel="noopener" aria-label="UC Santa Cruz">
-        <img src="ucsc-logo.png" alt="UC Santa Cruz" style="height: 48px;">
+        <img src="ucsc-logo.png" alt="UC Santa Cruz" class="ucsc-logo">
       </a>
       <a href="https://techfuturesgroup.org/" target="_blank" rel="noopener" aria-label="Tech Futures Group">
         <img src="https://images.squarespace-cdn.com/content/v1/623cbf0eefc3622f77fc3e40/a319fe6e-8ba9-4a20-83aa-dff3d2de57f1/tech+futures+group.webp" alt="Tech Futures Group">
