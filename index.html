@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StorkLabs Medical</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600&family=Lora:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green:      #6A8D73;
+      --violet:     #9586BA;
+      --yellow:     #FFB662;
+      --jet:        #2F2E2E;
+      --cream:      #F7F4ED;
+      --green-pale: #eaf0eb;
+      --violet-pale:#f3f0f9;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Lora', Georgia, serif;
+      background: var(--cream);
+      color: var(--jet);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── SCROLL ANIMATIONS ────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1);
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-d1 { transition-delay: .08s; }
+    .reveal-d2 { transition-delay: .16s; }
+    .reveal-d3 { transition-delay: .24s; }
+    .reveal-d4 { transition-delay: .32s; }
+
+    /* ── NAV ──────────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 200;
+      background: rgba(247,244,237,.98);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      /*border-bottom: 1px solid rgba(106,141,115,.12);*/
+    }
+    .nav-top {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 52px;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo img { height: 54px; width: auto; }
+    .logo-wordmark { line-height: 1.0; }
+    .logo-name {
+      font-size: 30px; font-weight: 500; color: var(--jet);
+      letter-spacing: .01em;
+    }
+    .logo-sub {
+      font-family: 'Roboto', sans-serif;
+      font-size: 13px; font-weight: 600; letter-spacing: .28em;
+      text-transform: uppercase; color: var(--green);
+      margin-top: 1px;
+    }
+    .nav-contact {
+      background: var(--green); color: #fff !important;
+      padding: 8px 24px; border-radius: 4px; text-decoration: none;
+      font-size: 12.5px; font-weight: 500; letter-spacing: .04em;
+      transition: background .2s; white-space: nowrap;
+      font-family: 'Roboto', sans-serif;
+    }
+    .nav-contact:hover { background: #5a7a62; }
+
+    /* Tab bar */
+    .nav-tabs {
+      display: flex; align-items: center; justify-content: center;
+      border-top: 1px solid rgba(106,141,115,.08);
+    }
+    .nav-tabs a {
+      font-family: 'Roboto', sans-serif;
+      font-size: 13px; font-weight: 500; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--jet);
+      text-decoration: none; padding: 12px 36px;
+      opacity: .75; transition: opacity .18s;
+      border-bottom: 2px solid transparent;
+    }
+    .nav-tabs a:hover { opacity: 1; }
+    .nav-tabs a.active { opacity: 1; border-bottom-color: var(--violet); color: var(--violet); }
+
+    /* ── SHARED ───────────────────────────────────────────────── */
+    h1, h2, h3, h4 { font-family: 'Roboto', sans-serif; }
+    .container { max-width: 1080px; margin: 0 auto; }
+    section { padding: 100px 52px; }
+    .eyebrow {
+      font-family: 'Roboto', sans-serif;
+      font-size: 15px; font-weight: 600; letter-spacing: .14em;
+      text-transform: uppercase; margin-bottom: 24px;
+    }
+    h2 {
+      font-size: clamp(30px, 3.6vw, 46px); font-weight: 300;
+      line-height: 1.22; margin-bottom: 52px;
+    }
+
+    /* ── HERO ─────────────────────────────────────────────────── */
+    #hero {
+      padding-top: 160px; padding-bottom: 100px;
+      min-height: 80vh; display: flex; align-items: center;
+    }
+    h1 {
+      font-size: clamp(34px, 4.4vw, 56px); font-weight: 300;
+      line-height: 1.15; color: var(--jet);
+      max-width: 740px; margin-bottom: 28px;
+    }
+    h1 em { font-style: normal; color: var(--violet); }
+    .hero-sub {
+      font-size: 20px; font-weight: 300; line-height: 1.7;
+      opacity: .7; max-width: 580px;
+    }
+
+    /* ── AFFILIATIONS ─────────────────────────────────────────── */
+    .aff-bar {
+      background: var(--cream);
+      border-top: 1px solid rgba(106,141,115,.08);
+      border-bottom: 1px solid rgba(106,141,115,.08);
+      padding: 48px 52px;
+    }
+    .aff-inner { max-width: 1080px; margin: 0 auto; }
+    .aff-label {
+      font-family: 'Roboto', sans-serif;
+      font-size: 14px; letter-spacing: .16em; text-transform: uppercase;
+      color: var(--jet); opacity: .85; text-align: center; margin-bottom: 36px;
+    }
+    .aff-row {
+      display: flex; justify-content: center; align-items: center;
+      gap: 64px; margin-bottom: 36px;
+    }
+    .aff-row:last-child { margin-bottom: 0; }
+    .aff-row a { display: inline-flex; align-items: center; line-height: 0; }
+    .aff-row img {
+      height: 72px; width: auto; min-width: 70px;
+      filter: grayscale(30%);
+      opacity: .85;
+      transition: filter .25s, opacity .25s, transform .25s;
+      object-fit: contain;
+    }
+    .aff-row a:hover img,
+    .aff-row img:hover { filter: grayscale(0%); opacity: 1; transform: translateY(-2px); }
+
+    /* ── SOLUTION / TECH ──────────────────────────────────────── */
+    #tech { background: var(--cream); }
+    #tech .eyebrow { color: var(--violet); }
+    .sol-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; }
+    .sol-copy h2 { margin-bottom: 20px; }
+    .sol-copy p { font-size: 18px; font-weight: 300; opacity: .72; line-height: 1.75; margin-bottom: 36px; }
+    .feature-list { list-style: none; display: flex; flex-direction: column; gap: 13px; }
+    .feature-list li { display: flex; align-items: flex-start; gap: 14px; font-size: 16px; }
+    .fdot { width: 6px; height: 6px; border-radius: 50%; background: var(--violet); flex-shrink: 0; margin-top: 8px; }
+
+    .device-wrap {
+      border-radius: 10px; overflow: hidden;
+      background: #1a2630; aspect-ratio: 16/10;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .device-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    /* ── PROBLEM STATS ────────────────────────────────────────── */
+    #problem { background: var(--jet); color: #fff; }
+    #problem .eyebrow { color: var(--violet); }
+    #problem h2 { color: #fff; max-width: 620px; }
+    .stat-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 28px; }
+    .stat-card {
+      padding: 38px 30px;
+      border: 1px solid rgba(255,255,255,.08); border-radius: 8px;
+    }
+    .stat-num {
+      font-family: 'Roboto', sans-serif;
+      font-size: 46px; font-weight: 300; color: var(--violet);
+      line-height: 1; margin-bottom: 14px;
+    }
+    .stat-desc { font-size: 15px; font-weight: 300; opacity: .72; line-height: 1.7; }
+
+    /* ── TRACTION ─────────────────────────────────────────────── */
+    #traction { background: var(--green); color: #fff; }
+    #traction .eyebrow { color: rgba(255,255,255,.5); }
+    #traction h2 { color: #fff; }
+    .tr-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 48px; max-width: 640px; }
+    .tr-item { border-left: 2px solid rgba(255,255,255,.2); padding-left: 22px; }
+    .tr-num {
+      font-family: 'Roboto', sans-serif;
+      font-size: 34px; font-weight: 300; color: #fff; margin-bottom: 10px;
+    }
+    .tr-desc { font-size: 16px; font-weight: 300; opacity: .8; line-height: 1.65; }
+
+    /* ── TEAM ─────────────────────────────────────────────────── */
+    #team { background: var(--cream); }
+    #team .eyebrow { color: var(--green); }
+    .team-section-header { margin-bottom: 48px; }
+    .team-grid {
+      display: grid; grid-template-columns: repeat(4, 160px);
+      justify-content: center; gap: 80px;
+    }
+    .team-card { display: flex; flex-direction: column; gap: 12px; text-align: center; align-items: center; }
+    .team-photo {
+      width: 150px; height: 150px; border-radius: 50%;
+      background: var(--green-pale); overflow: hidden;
+      margin: 0 auto;
+    }
+    .team-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 10%; }
+    .team-photo-initials {
+      font-family: 'Roboto', sans-serif;
+      font-size: 32px; font-weight: 300; color: var(--green);
+      display: flex; align-items: center; justify-content: center;
+      width: 100%; height: 100%;
+    }
+    .team-role {
+      font-family: 'Roboto', sans-serif;
+      font-size: 10px; font-weight: 600; letter-spacing: .13em;
+      text-transform: uppercase; color: var(--violet); margin-bottom: 3px;
+    }
+    .team-card h3 { font-size: 15px; font-weight: 500; white-space: nowrap; }
+    .team-card p { font-size: 16px; font-weight: 300; opacity: .72; line-height: 1.65; }
+
+    .adv-row { margin-top: 64px; padding-top: 52px; border-top: 1px solid rgba(106,141,115,.12); }
+    .adv-label {
+      font-family: 'Roboto', sans-serif;
+      font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+      opacity: .48; margin-bottom: 32px; text-align: center;
+    }
+    .adv-grid {
+      display: grid; grid-template-columns: repeat(2, 150px);
+      justify-content: center; gap: 40px;
+    }
+    .adv-card { display: flex; flex-direction: column; gap: 14px; text-align: center; }
+    .adv-photo {
+      width: 150px; height: 150px; border-radius: 50%;
+      background: var(--violet-pale); overflow: hidden;
+      margin: 0 auto;
+    }
+    .adv-photo img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+    .adv-photo-initials {
+      font-family: 'Roboto', sans-serif;
+      font-size: 28px; font-weight: 300; color: var(--violet);
+      display: flex; align-items: center; justify-content: center;
+      width: 100%; height: 100%;
+    }
+    .adv-card h4 { font-size: 15px; font-weight: 500; white-space: nowrap; }
+    .adv-card p { font-size: 15px; font-weight: 300; opacity: .72; line-height: 1.6; }
+
+    /* ── NEWS ─────────────────────────────────────────────────── */
+    #news { background: #fff; }
+    #news .eyebrow { color: var(--violet); }
+    .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
+    .news-card {
+      display: flex; flex-direction: column;
+      border: 1px solid rgba(149,134,186,.12);
+      border-radius: 8px; overflow: hidden;
+      text-decoration: none; color: var(--jet);
+      transition: box-shadow .22s, transform .22s;
+    }
+    .news-card:hover {
+      box-shadow: 0 8px 28px rgba(47,46,46,.07);
+      transform: translateY(-2px);
+    }
+    .news-body { padding: 24px 24px 26px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+    .news-pub {
+      font-family: 'Roboto', sans-serif;
+      font-size: 10px; font-weight: 600; letter-spacing: .13em;
+      text-transform: uppercase; color: var(--violet);
+    }
+    .news-title { font-size: 16px; font-weight: 400; line-height: 1.45; }
+    .news-arrow {
+      font-size: 12px; opacity: .48; margin-top: auto; padding-top: 12px;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    /* ── CTA / CONTACT ───────────────────────────────────────── */
+    #contact {
+      background: var(--jet); color: #fff;
+      padding: 100px 52px;
+      scroll-margin-top: 100px;
+    }
+    #contact .eyebrow { color: var(--violet); }
+    #contact h2 { color: #fff; margin-bottom: 12px; }
+    #contact .sub { font-size: 17px; font-weight: 300; opacity: .55; margin-bottom: 52px; }
+    #contact { text-align: center; }
+    .contact-inner { max-width: 620px; margin: 0 auto; }
+    .contact-info p { font-size: 17px; font-weight: 300; opacity: .65; line-height: 1.8; margin-bottom: 32px; color: #fff; }
+    .contact-info a {
+      display: inline-block;
+      background: var(--violet); color: #fff; text-decoration: none;
+      font-family: 'Roboto', sans-serif; font-size: 16px; font-weight: 500;
+      letter-spacing: .02em;
+      padding: 14px 32px; border-radius: 999px;
+      box-shadow: 0 6px 20px rgba(149,134,186,.25);
+      transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+    .contact-info a:hover {
+      transform: translateY(-1px);
+      background: #a396c5;
+      box-shadow: 0 10px 24px rgba(149,134,186,.35);
+    }
+
+    /* ── FOOTER ───────────────────────────────────────────────── */
+    footer {
+      background: #222120; color: #fff; padding: 28px 52px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-left { display: flex; align-items: center; gap: 10px; }
+    .footer-left img { height: 22px; width: auto; opacity: .4; filter: invert(1); }
+    .footer-copy { font-size: 12px; font-weight: 300; opacity: .45; }
+    footer a { font-size: 12px; font-weight: 300; color: #fff; opacity: .45; text-decoration: none; transition: opacity .2s; }
+    footer a:hover { opacity: .75; }
+
+    /* ── RESPONSIVE ───────────────────────────────────────────── */
+    @media (max-width: 860px) {
+      .nav-top { padding: 10px 20px; }
+      .nav-tabs { overflow-x: auto; justify-content: flex-start; -webkit-overflow-scrolling: touch; }
+      .nav-tabs a { padding: 10px 20px; font-size: 11px; white-space: nowrap; }
+      section { padding: 72px 24px; }
+      .aff-bar { padding: 36px 24px; }
+      .aff-row { gap: 32px 40px; flex-wrap: wrap; }
+      .aff-row img { height: 48px; }
+      .sol-grid { grid-template-columns: 1fr; gap: 40px; }
+      .stat-grid { grid-template-columns: 1fr; }
+      .tr-grid { grid-template-columns: repeat(2,1fr); gap: 24px; }
+      .team-grid { flex-direction: column; align-items: center; }
+      .adv-grid { flex-direction: column; align-items: center; }
+      .news-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 10px; text-align: center; padding: 24px 20px 120px; }
+      #hero { padding-top: 130px; min-height: auto; padding-bottom: 64px; }
+      #contact { padding: 48px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ──────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-top">
+    <a href="#hero" class="logo">
+      <img src="logo.png" alt="StorkLabs">
+      <div class="logo-wordmark">
+        <div class="logo-name">Stork Labs</div>
+        <div class="logo-sub">Medical</div>
+      </div>
+    </a>
+  </div>
+  <div class="nav-tabs">
+    <a href="#hero">Home</a>
+    <a href="#tech">Tech</a>
+    <a href="#team">Team</a>
+    <a href="#news">News</a>
+    <a href="#contact">Contact Us</a>
+  </div>
+</nav>
+
+
+<!-- ── HERO ─────────────────────────────────────────────────── -->
+<section id="hero">
+  <div class="container">
+    <h1 class="reveal">Addressing the maternity care crisis through <em>safer tooling</em> for emergency childbirth.</h1>
+    <p class="hero-sub reveal reveal-d1">Giving OB/GYNs the confidence to choose <br> assisted vaginal delivery over unplanned C-section.</p>
+    <!-- <p class="hero-sub reveal reveal-d1">We are developing a novel tool to improve physician confidence during assisted vaginal delivery tool.</p> -->
+    <!-- <p class="hero-sub reveal reveal-d1">We are developing a novel assisted vaginal delivery device to give physicians the confidence to choose vaginal delivery over unplanned C-sections.</p> -->
+  </div>
+</section>
+
+
+<!-- ── AFFILIATIONS ──────────────────────────────────────────── -->
+<div class="aff-bar">
+  <div class="aff-inner reveal">
+    <div class="aff-label">Supported by</div>
+    <div class="aff-row">
+      <a href="https://new.nsf.gov/funding/initiatives/i-corps" target="_blank" rel="noopener" aria-label="NSF I-Corps">
+        <img src="nsf-icorps.png" alt="NSF I-Corps">
+      </a>
+      <a href="https://pediatricdeviceconsortium.org/" target="_blank" rel="noopener" aria-label="UCSF–Stanford Pediatric Device Consortium">
+        <img src="https://images.squarespace-cdn.com/content/v1/623cbf0eefc3622f77fc3e40/f4bbd5f8-5026-47b9-987b-e173d317f7d4/ucsf-stanford-pdc.jpg" alt="UCSF Stanford PDC">
+      </a>
+      <a href="https://med.stanford.edu/biodesign/programs/impact1.html" target="_blank" rel="noopener" aria-label="Stanford Biodesign Impact1">
+        <img src="https://images.squarespace-cdn.com/content/v1/623cbf0eefc3622f77fc3e40/2e662e90-2874-4415-ac73-976f901ed343/impact1.png" alt="Impact1">
+      </a>
+      <a href="https://www.uclaunch.com/" target="_blank" rel="noopener" aria-label="UC Launch">
+        <img src="https://images.squarespace-cdn.com/content/v1/623cbf0eefc3622f77fc3e40/ce3af3e0-60f5-4b63-917e-53c9eaf2342e/launch-logo.webp" alt="UC Launch">
+      </a>
+    </div>
+    <div class="aff-row">
+      <a href="https://www.lexmundiprobono.org/" target="_blank" rel="noopener" aria-label="Lex Mundi Pro Bono Foundation">
+        <img src="LMPBF-default.png" alt="Lex Mundi Pro Bono Foundation">
+      </a>
+      <a href="https://engineering.ucsc.edu/" target="_blank" rel="noopener" aria-label="UC Santa Cruz">
+        <img src="ucsc-logo.png" alt="UC Santa Cruz" style="height: 48px;">
+      </a>
+      <a href="https://techfuturesgroup.org/" target="_blank" rel="noopener" aria-label="Tech Futures Group">
+        <img src="https://images.squarespace-cdn.com/content/v1/623cbf0eefc3622f77fc3e40/a319fe6e-8ba9-4a20-83aa-dff3d2de57f1/tech+futures+group.webp" alt="Tech Futures Group">
+      </a>
+      <a href="https://www.medtechwomen.org/" target="_blank" rel="noopener" aria-label="MedtechWomen">
+        <img src="https://images.squarespace-cdn.com/content/v1/623cbf0eefc3622f77fc3e40/a13b33a7-02c6-4728-a3c2-60f3096a85de/medtechwomen_logo.jpeg" alt="Medtech Women">
+      </a>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── PROBLEM ──────────────────────────────────────────────── -->
+<section id="problem">
+  <div class="container">
+    <div class="eyebrow reveal">The Problem</div>
+    <h2 class="reveal reveal-d1">Assisted vaginal delivery tools are a physician's last line of defense before an unplanned C-section — yet they often go unused.</h2>
+    <div class="stat-grid">
+      <div class="stat-card reveal reveal-d1">
+        <div class="stat-num">1 Million</div>
+        <div class="stat-desc">U.S. births end in C-section annually — carrying 5× higher maternal mortality risk, 3× higher hemorrhage risk, and adding $13B in costs per year.</div>
+      </div>
+      <div class="stat-card reveal reveal-d2">
+        <div class="stat-num">3%</div>
+        <div class="stat-desc">Assisted vaginal delivery rate today, down from 9%. Physicians default to C-section because existing tools are hard to use, cause injury, and offer no procedural feedback.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── TECH / SOLUTION ────────────────────────────────────────── -->
+<section id="tech">
+  <div class="container">
+    <div class="sol-grid">
+      <div class="sol-copy">
+        <div class="eyebrow reveal">The Solution</div>
+        <h2 class="reveal reveal-d1">Innovating maternal care with soft robotics</h2>
+        <p class="reveal reveal-d2">We're developing a flexible, sensor-guided device designed to take the guess work out of assisted vaginal deliveries.</p>
+        <!-- <p class="reveal reveal-d2">We are developing a flexible, semi-autonomous tool that addresses the two most common indications for unplanned C-sections: maternal arrest of labor and fetal distress.</p> -->
+        <!-- <ul class="feature-list reveal reveal-d3">
+          <li><span class="fdot"></span>Flexible materials conform to maternal/fetal anatomy</li>
+          <li><span class="fdot"></span>Integrated sensors for step-by-step procedural guidance</li>
+          <li><span class="fdot"></span>Real-time feedback with confirmed correct placement</li>
+        </ul> -->
+      </div>
+      <div class="device-wrap reveal reveal-d2" style="position:relative; display:inline-block;">
+        <img src="pelican-render.jpg" alt="Pelican device — design concept">
+        <span style="
+          position: absolute; bottom: 12px; right: 12px;
+          font-family: 'Roboto', sans-serif;
+          font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+          color: #fff; background: rgba(47,46,46,.45);
+          padding: 4px 10px; border-radius: 4px;
+          backdrop-filter: blur(4px);
+        ">Design Concept</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── TRACTION ──────────────────────────────────────────────── -->
+<section id="traction">
+  <div class="container">
+    <div class="eyebrow reveal">Traction</div>
+    <h2 class="reveal reveal-d1">Built on evidence and clinical insight.</h2>
+    <div class="tr-grid">
+      <div class="tr-item reveal reveal-d1">
+        <div class="tr-num">200+</div>
+        <div class="tr-desc">Interviews with our stakeholders, including physicians, mothers, and midwives </div>
+      </div>
+      <div class="tr-item reveal reveal-d2">
+        <div class="tr-num">$75K</div>
+        <div class="tr-desc">Non-dilutive funding <br> NSF I-Corps & UCSF–Stanford Pediatric Device Consortium</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── TEAM ──────────────────────────────────────────────────── -->
+<section id="team">
+  <div class="container">
+    <div class="eyebrow reveal">Team</div>
+    <div class="team-grid">
+      <div class="team-card reveal reveal-d1">
+        <div class="team-photo">
+          <img src="headshot-maryam-b.png" alt="Maryam Tebyani" style="object-position: center 10%;"
+               onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=team-photo-initials>MT</span>'">
+        </div>
+        <h3>Maryam Tebyani, PhD</h3>
+        <div class="team-role">CEO & Co-founder</div>
+      </div>
+      <div class="team-card reveal reveal-d2">
+        <div class="team-photo">
+          <img src="headshot-breanna-b.png" alt="Breanna Baltaxe-Admony" style="object-position: center 10%;"
+               onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=team-photo-initials>BA</span>'">
+        </div>
+        <h3>Breanna Baltaxe-Admony, PhD</h3>
+        <div class="team-role">COO & Co-founder</div>
+      </div>
+      <div class="team-card reveal reveal-d3">
+        <div class="team-photo">
+          <img src="headshot-neda-b.png" alt="Neda Ghaffari" style="object-position: center 10%;"
+               onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=team-photo-initials>NG</span>'">
+        </div>
+        <h3>Neda Ghaffari, MD</h3>
+        <div class="team-role">Medical Advisor</div>
+      </div>
+      <div class="team-card reveal reveal-d4">
+        <div class="team-photo">
+          <img src="headshot-jim-b.png" alt="Jim Swick" style="object-position: center 10%;"
+               onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=team-photo-initials>JS</span>'">
+        </div>
+        <h3>Jim Swick, PhD</h3>
+        <div class="team-role">Preclinical Advisor</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── NEWS ─────────────────────────────────────────────────── -->
+<section id="news">
+  <div class="container">
+    <div class="eyebrow reveal">News</div>
+    <!-- <h2 class="reveal reveal-d1">Latest updates.</h2> -->
+    <div class="news-grid">
+      <!-- <a href="https://www.linkedin.com/posts/impact1biodesign_maternalhealth-healthcareinnovation-womeninmedtech-activity-7135001848742121472-gu3l/" target="_blank" rel="noopener" class="news-card reveal reveal-d1">
+        <div class="news-body">
+          <div class="news-pub">LinkedIn · Impact1 Biodesign</div>
+          <div class="news-title">Maryam & Bre graduate with PhDs from UC Santa Cruz, Baskin School of Engineering</div>
+          <div class="news-arrow">Read more →</div>
+        </div>
+      </a> -->
+      <a href="https://www.linkedin.com/posts/impact1biodesign_maternalhealth-healthcareinnovation-womeninmedtech-activity-7135001848742121472-gu3l/" target="_blank" rel="noopener" class="news-card reveal reveal-d3">
+        <div class="news-body">
+          <div class="news-pub">LinkedIn · Impact1 Biodesign</div>
+          <div class="news-title">Maryam Tebyani shares Stork Labs' vision at Impact1's inaugural CEO Summit</div>
+          <div class="news-arrow">Read more →</div>
+        </div>
+      </a>
+      <a href="https://www.santacruzworks.org/news/stork-labs" target="_blank" rel="noopener" class="news-card reveal reveal-d2">
+        <div class="news-body">
+          <div class="news-pub">Santa Cruz Works</div>
+          <div class="news-title">Stork Labs is featured by Santa Cruz Works</div>
+          <div class="news-arrow">Read more →</div>
+        </div>
+      </a>
+      <a href="https://pediatricdeviceconsortium.org/accelerator-pitch-competition-2022" target="_blank" rel="noopener" class="news-card reveal reveal-d4">
+        <div class="news-body">
+          <div class="news-pub">UCSF–Stanford Pediatric Device Consortium</div>
+          <div class="news-title">Stork Labs awarded at UCSF–Stanford Pediatric Device Consortium pitch competition</div>
+          <div class="news-arrow">Read more →</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── CONTACT ──────────────────────────────────────────────── -->
+<section id="contact">
+  <div class="container">
+    <div class="eyebrow reveal">Contact Us</div>
+    <h2 class="reveal reveal-d1">Please email us to inquire about a collaboration, or simply say hello.</h2>
+    <div class="contact-inner reveal reveal-d2">
+
+      <div class="contact-info">
+        <p> </p>
+        <!-- <p>Please email us to inquire about a collaboration, or simply say hello.</p> -->
+        <a href="mailto:team@stork-labs.com">team@stork-labs.com</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ── FOOTER ────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-left">
+    <img src="logo.png" alt="StorkLabs">
+    <span class="footer-copy">StorkLabs Medical © 2026</span>
+  </div>
+  <a href="mailto:team@stork-labs.com">team@stork-labs.com</a>
+</footer>
+
+
+<script>
+  // Scroll reveal
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  // Active nav tab on scroll
+  const sectionIds = ['hero','tech','team','news','contact'];
+  const tabs = {};
+  sectionIds.forEach(id => {
+    const el = document.querySelector(`.nav-tabs a[href="#${id}"]`);
+    if (el) tabs[id] = el;
+  });
+  function updateTabs() {
+    const y = window.scrollY + 140;
+    let active = 'hero';
+    sectionIds.forEach(id => {
+      const sec = document.getElementById(id);
+      if (sec && sec.offsetTop <= y) active = id;
+    });
+    Object.values(tabs).forEach(a => a.classList.remove('active'));
+    if (tabs[active]) tabs[active].classList.add('active');
+  }
+  window.addEventListener('scroll', updateTabs, { passive: true });
+  updateTabs();
+</script>
+</body>
+</html>
